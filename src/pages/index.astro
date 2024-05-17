@@ -1,16 +1,16 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import PrimaryNavigation from "../components/PrimaryNavigation.astro";
+import Head from "../components/BaseHead.astro";
+import Navigation from "../components/PrimaryNavigation.astro";
 import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
 import Socials from "../components/Socials.astro";
 ---
 
 <html lang="en">
-  <BaseHead />
+  <Head />
   <body class="relative bg-[url('/main-bg.png')] overflow-hidden">
     <canvas id="canvas" class="fixed top-0 left-0 w-full h-full"></canvas>
-    <PrimaryNavigation />
+    <Navigation />
     <Hero />
     <Footer />
     <Socials />
@@ -21,6 +21,7 @@ import Socials from "../components/Socials.astro";
       </div>
     </div>
 
+    <!-- import animation dependencies -->
     <script src="../scripts/bg-rocket.js"></script>
     <script src="../scripts/bg-canvas.js"></script>
 
