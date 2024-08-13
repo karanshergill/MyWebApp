@@ -2,50 +2,39 @@
 
 ---
 
-<section class="bg-transparent dark:bg-transparent mt-20">
+<section class="grid md:grid-cols-3">
+  <!-- intro -->
   <div
-    class="grid max-w-screen-xl px-4 pt-8 mx-auto lg:gap-8 xl:gap-0 lg:pt-14 lg:grid-cols-12"
+    class="col-span-2
+    flex
+    flex-col
+    justify-center
+    gap-3
+    text-slate-200"
   >
-    <div class="mr-auto place-self-center lg:col-span-8">
-      <p
-        class="max-w-2xl mb-1 font-light text-gray-100 text-lg lg:mb-3 md:text-xl lg:text-2xl dark:text-gray-100"
+    <div class="flex flex-col gap-1">
+      <span class="text-4xl font-sub-heading tracking-wide">Hi, my name is</span
       >
-        Hi, my name is
-      </p>
-      <h1
-        class="font-comfortaa max-w-2xl mb-2 text-4xl font-extrabold tracking-wide left md:text-5xl xl:text-6xl dark:text-white pb-1.5"
-      >
-        Karan Shergill.
-      </h1>
-      <h1
-        class="font-comfortaa max-w-2xl mb-1 text-4xl font-extrabold right md:text-5xl xl:text-5xl dark:text-white pb-1.5"
-      >
-        I build things for the web.
-      </h1>
-      <p
-        class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"
-      >
-        Software Engineer and a Certified Ethical Hacker based in India.
+      <div class="bg-gradient-hero w-max bg-clip-text text-transparent">
+        <h1 class="text-6xl font-heading tracking-wider">Karan Shergill.</h1>
+      </div>
+    </div>
+
+    <div class="flex flex-col text-2xl font-description">
+      <h2 class="tracking-wide font-semibold">I build things for the web.</h2>
+      <p class="tracking-wide">
+        Full-Stack Engineer and a Professional Hacker based in India.
       </p>
     </div>
-    <div class="hidden lg:mt-0 lg:col-span-4 lg:flex animation-wrapper">
-      <img src="hero.png" alt="" />
-    </div>
+  </div>
+
+  <!-- avatar -->
+  <div class="flex col-span-1 place-content-center animation-wrapper">
+    <img src="hero.png" alt="" />
   </div>
 </section>
 
 <style>
-  h1 {
-    --to: left;
-    background-image: linear-gradient(to var(--to), #89a5df, #e46e7f, #e8e191);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  h1.right {
-    --to: right;
-  }
-
   .animation-wrapper {
     background-blend-mode: screen;
     background-size: cover;

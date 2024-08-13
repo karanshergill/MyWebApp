@@ -1,12 +1,10 @@
 ---
-
+const copyrightYear = new Date().getFullYear();
 ---
 
-<footer>
-  <div class="flex py-24 mx-auto md:px-12 lg:px-32 max-w-7xl">
-    <span class="mx-auto text-sm font-medium text-gray-500">
-      Copyright © <span>2024</span>
-      <a href="/">Karan Shergill</a>
-    </span>
-  </div>
+<footer
+  class="flex flex-col gap-1 items-center justify-center font-footer text-xs text-white"
+>
+  <p>Copyright &copy; {copyrightYear}</p>
+  <p>Designed & Developed in India</p>
 </footer>
