@@ -1,23 +1,20 @@
 ---
-
+const {
+  title = "Karan Shergill",
+  description = "Full-Stack Software Engineer and Professional Ethical Hacker ",
+} = Astro.props;
 ---
 
 <head>
   <meta charset="utf-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="viewport" content="width=device-width" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index, follow" />
   <meta name="generator" content={Astro.generator} />
-  <!-- import font awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-  />
-  <!-- import animate css -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
-
-  <!-- TODO: generate this dynamically -->
-  <title>Karan Shergill</title>
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <script
+    defer
+    src="https://umami.up.railway.app/script.js"
+    data-website-id="0311b62c-a331-4696-a4a4-c7783ba4be5f"></script>
 </head>

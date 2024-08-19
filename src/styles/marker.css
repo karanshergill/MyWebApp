@@ -1,0 +1,15 @@
+#navbar-sticky {
+    position: relative;
+}
+
+/* navigation bar animation */
+#marker {
+    bottom: 25px;
+    height: 100%;
+    width: 0px;
+    border-top: 5px solid #08f9ff;
+    background: linear-gradient(180deg, #08f9ff33, transparent);
+    transition: 0.5s;
+    pointer-events: none;
+    filter: drop-shadow(0 25px 15px #08f9ff);
+}

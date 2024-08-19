@@ -1,0 +1,13 @@
+<svg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'
+    xmlns:xlink='http://www.w3.org/1999/xlink'>
+    <rect width='24' height='24' stroke='none' fill='#000000' opacity='0' />
+
+
+    <g transform="matrix(0.59 0 0 0.59 12 12)">
+        <path
+            style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: #FFFFFF; fill-rule: nonzero; opacity: 1;"
+            transform=" translate(-24, -24)"
+            d="M 15 15 L 7 15 L 7 7 L 15 7 L 15 15 z M 28 15 L 20 15 L 20 7 L 28 7 L 28 15 z M 41 15 L 33 15 L 33 7 L 41 7 L 41 15 z M 15 28 L 7 28 L 7 20 L 15 20 L 15 28 z M 28 28 L 20 28 L 20 20 L 28 20 L 28 28 z M 41 28 L 33 28 L 33 20 L 41 20 L 41 28 z M 15 41 L 7 41 L 7 33 L 15 33 L 15 41 z M 28 41 L 20 41 L 20 33 L 28 33 L 28 41 z M 41 41 L 33 41 L 33 33 L 41 33 L 41 41 z"
+            stroke-linecap="round" />
+    </g>
+</svg>

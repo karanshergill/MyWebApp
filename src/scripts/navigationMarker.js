@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   let marker = document.querySelector("#marker");
   let items = document.querySelectorAll("nav ul li a");
@@ -34,3 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
     indicator(activeLink);
   }
 });
+
+
+
+// Add to html
+//       <div id="marker"></div>
+
+// id="navbar-sticky"

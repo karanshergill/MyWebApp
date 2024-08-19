@@ -1,36 +1,68 @@
 ---
-
+import Scramble from "./react/Scramble.jsx";
+import Socials from "./Socials.astro";
 ---
 
-<section class="grid md:grid-cols-3">
+<section class="grid md:grid-cols-3 pt-2 md:pt-10">
   <!-- intro -->
   <div
-    class="col-span-2
+    class="md:col-span-2
     flex
     flex-col
     justify-center
     gap-3
+    md:gap-6
     text-slate-200"
   >
-    <div class="flex flex-col gap-1">
-      <span class="text-4xl font-sub-heading tracking-wide">Hi, my name is</span
+    <!-- name -->
+    <div class="flex flex-col items-center md:items-start gap-1">
+      <span class="text-2xl md:text-4xl font-sub-heading tracking-wide"
+        >Hi, my name is</span
       >
       <div class="bg-gradient-hero w-max bg-clip-text text-transparent">
-        <h1 class="text-6xl font-heading tracking-wider">Karan Shergill.</h1>
+        <h1 class="text-4xl md:text-6xl font-heading tracking-wider">
+          Karan Shergill.
+        </h1>
       </div>
     </div>
-
-    <div class="flex flex-col text-2xl font-description">
-      <h2 class="tracking-wide font-semibold">I build things for the web.</h2>
-      <p class="tracking-wide">
-        Full-Stack Engineer and a Professional Hacker based in India.
+    <!-- intro -->
+    <div
+      class="flex
+          flex-col items-center md:items-start
+          md:gap-2
+          gap-1
+          font-description"
+    >
+      <h2 class="text-xl md:text-2xl tracking-wide font-semibold">
+        I <span
+          ><Scramble
+            initialText="build"
+            alternateText="break"
+            initialColorClass="text-white"
+            alternateColorClass="text-white"
+            client:load
+          /></span
+        > things
+        <Scramble
+          initialText="for"
+          alternateText="of"
+          initialColorClass="text-white"
+          alternateColorClass="text-white"
+          client:load
+        /> the web.
+      </h2>
+      <p class="text-sm md:text-xl text-center md:text-left tracking-wide">
+        Full-Stack Software Engineer by day, Professional Hacker by night.
       </p>
     </div>
+    <Socials />
   </div>
 
   <!-- avatar -->
-  <div class="flex col-span-1 place-content-center animation-wrapper">
-    <img src="hero.png" alt="" />
+  <div
+    class="flex md:col-span-1 order-first md:order-last place-content-center px-8 md:px-0 animation-wrapper"
+  >
+    <img src="hero.png" alt="Karan Shergill Avatar" />
   </div>
 </section>
 
