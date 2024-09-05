@@ -11,7 +11,7 @@ export default {
 				'footer': ['"Exo 2"', 'system-ui', 'sans-serif']
 			},
 			backgroundImage: {
-				'img-background': "url('https://ik.imagekit.io/karanshergill/MyWebApp/background.png')",
+				'home-background': "url('/home-background.png')",
 				'gradient-hero': "linear-gradient(to right, #facc15 0%, #ec4899 30%, #4f46e5 40%, #0ea5e9 60%, #10b981 60%, #4f46e5 90%, #ec4899 100%)",
 			},
 			keyframes: {
