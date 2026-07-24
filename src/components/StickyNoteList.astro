@@ -1,0 +1,131 @@
+---
+interface Item {
+  text: string;
+  note: string;
+}
+interface Section {
+  label: string;
+  items: Item[];
+}
+interface Props {
+  updated?: string;
+  sections: Section[];
+}
+const { updated, sections } = Astro.props;
+---
+
+<div class="sticky-layout">
+  <div class="sticky-list">
+    {sections.map((section) => (
+      <section>
+        <h2 class="section-title">{section.label}</h2>
+        <ul class="note-items">
+          {section.items.map((item) => (
+            <li class="list-item" tabindex="0" data-note={item.note}>
+              {item.text}
+              <span class="mobile-note" aria-hidden="false"> — {item.note}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+  <aside class="sticky-display" aria-hidden="true">
+    <div class="note-card" id="note-display">{updated ? `updated: ${updated}` : 'hover an item →'}</div>
+  </aside>
+</div>
+
+<style>
+  .sticky-layout {
+    display: block;
+  }
+  .note-items {
+    list-style: none;
+    padding: 0;
+  }
+  .list-item {
+    padding: 0.4rem 0;
+    cursor: default;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .list-item:hover,
+  .list-item:focus,
+  .list-item.active {
+    color: var(--accent-color);
+    outline: none;
+  }
+  .mobile-note {
+    font-family: var(--font-hand);
+    color: var(--ink);
+    opacity: 0.8;
+  }
+  @media (min-width: 900px) {
+    .sticky-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 2rem;
+    }
+    .mobile-note {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+    .list-item {
+      cursor: pointer;
+    }
+    .sticky-display {
+      position: sticky;
+      top: 20vh;
+      height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .note-card {
+      font-family: var(--font-hand);
+      color: var(--ink);
+      font-size: var(--hand-lg);
+      text-align: center;
+      transform: rotate(-2deg);
+      transition: opacity 0.1s;
+      padding: 1rem;
+    }
+  }
+</style>
+
+<script>
+  function init() {
+    const display = document.getElementById('note-display');
+    if (!display || display.dataset.bound) return;
+    display.dataset.bound = '1';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let clear: number | undefined;
+    function swap(note: string) {
+      if (reduce) {
+        display!.textContent = note;
+        return;
+      }
+      display!.style.opacity = '0';
+      window.clearTimeout(clear);
+      clear = window.setTimeout(() => {
+        display!.textContent = note;
+        display!.style.opacity = '1';
+      }, 100);
+    }
+    document.querySelectorAll<HTMLElement>('.list-item').forEach((item) => {
+      const show = () => {
+        document.querySelectorAll('.list-item.active').forEach((a) => a.classList.remove('active'));
+        item.classList.add('active');
+        swap(item.dataset.note || '');
+      };
+      item.addEventListener('mouseenter', show);
+      item.addEventListener('focus', show);
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

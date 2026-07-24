@@ -1,0 +1,19 @@
+---
+import { sketchLine } from '../lib/rough';
+
+interface Props {
+  label?: string;
+}
+const { label = '5vh' } = Astro.props;
+// a build-time hand-drawn measurement guide: vertical rule + end ticks
+const rule = sketchLine(30, 10, 30, 50, 21);
+const tickTop = sketchLine(25, 10, 35, 10, 22);
+const tickBottom = sketchLine(25, 50, 35, 50, 23);
+---
+
+<span class="layout-guide" aria-hidden="true">
+  <svg width="60" height="60" viewBox="0 0 60 60" style="overflow: visible" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4">
+    {[...rule, ...tickTop, ...tickBottom].map((d) => <path d={d}></path>)}
+    <text x="40" y="35" font-size="17" fill="currentColor" stroke="none" opacity="0.6" style="font-family: var(--font-hand)">{label}</text>
+  </svg>
+</span>

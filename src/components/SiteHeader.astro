@@ -1,0 +1,45 @@
+---
+import SettingsMenu from './SettingsMenu.astro';
+
+interface Props {
+  active?: string;
+}
+const { active } = Astro.props;
+const nav = [
+  { href: '/projects', label: 'projects' },
+  { href: '/blog', label: 'blog' },
+  { href: '/gallery', label: 'gallery' },
+  { href: '/about', label: 'about' },
+];
+---
+
+<header class="site-header" id="site-header">
+  <a class="home-link" href="/">home</a>
+  <nav aria-label="sections">
+    {nav.map((n) => (
+      <a href={n.href} aria-current={active === n.label ? 'page' : undefined}>{n.label}</a>
+    ))}
+    <SettingsMenu />
+  </nav>
+</header>
+
+<script>
+  // hide-on-scroll (disabled under reduced motion — it's a viewport animation)
+  function init() {
+    const header = document.getElementById('site-header');
+    if (!header || header.dataset.bound) return;
+    header.dataset.bound = '1';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let last = 0;
+    window.addEventListener(
+      'scroll',
+      () => {
+        const y = window.scrollY;
+        header.classList.toggle('hidden-bar', y > last && y > 60);
+        last = Math.max(0, y);
+      },
+      { passive: true }
+    );
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

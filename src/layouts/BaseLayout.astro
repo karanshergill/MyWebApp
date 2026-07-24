@@ -1,0 +1,119 @@
+---
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import { SITE } from '../data/site';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogType?: string;
+}
+
+const { title, description = SITE.description, ogType = 'website' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// DRAFT copy — roles pending owner review (spec FR-009)
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Karan Shergill',
+  url: SITE.url,
+  jobTitle: 'Full-Stack Software Engineer & Security Researcher',
+  description: SITE.description,
+  worksFor: [
+    { '@type': 'Organization', name: 'HackerOne' },
+    { '@type': 'Organization', name: 'Basiq360' },
+    { '@type': 'Organization', name: 'Litass' },
+  ],
+  sameAs: Object.values(SITE.socials),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href={new URL('/rss.xml', Astro.site)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@imkaranshergill" />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+    <Font cssVariable="--font-hand" preload />
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-body" />
+    <Font cssVariable="--font-dyslexic" />
+    <ClientRouter />
+
+    <script is:inline>
+      /* theme boot: pre-paint, no flash. Shared via window.__theme for the switchers. */
+      (function () {
+        var THEMES = ['light', 'dark', 'cream'];
+        function stored() {
+          try { return localStorage.getItem('theme'); } catch (e) { return null; }
+        }
+        function preferred() {
+          var s = stored();
+          if (s && THEMES.indexOf(s) >= 0) return s;
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        function apply(t) {
+          var h = document.documentElement;
+          THEMES.forEach(function (x) { h.classList.remove(x + '-mode'); });
+          h.classList.add(t + '-mode');
+          h.dispatchEvent(new CustomEvent('themechange', { detail: t }));
+        }
+        window.__theme = {
+          THEMES: THEMES,
+          current: preferred,
+          set: function (t) {
+            try { localStorage.setItem('theme', t); } catch (e) {}
+            apply(t);
+          },
+        };
+        apply(preferred());
+        try {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+            if (!stored()) apply(e.matches ? 'dark' : 'light');
+          });
+        } catch (e) {}
+        document.addEventListener('astro:after-swap', function () { apply(preferred()); });
+      })();
+    </script>
+
+    <script is:inline>
+      /* ink-hidden FOUT choreography: handwriting fades in when Excalifont is ready.
+         catch + timeout ensure annotations are never permanently hidden. */
+      (function () {
+        var h = document.documentElement;
+        h.classList.add('ink-hidden');
+        var show = function () { h.classList.remove('ink-hidden'); };
+        if ('fonts' in document) {
+          document.fonts.load("1em 'Excalifont'").then(show).catch(show);
+          setTimeout(show, 2500);
+        } else {
+          show();
+        }
+      })();
+    </script>
+
+    <script defer src={SITE.umami.src} data-website-id={SITE.umami.websiteId}></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">skip to content</a>
+    <slot />
+  </body>
+</html>

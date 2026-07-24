@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "karanshergill-com",
+  "compatibility_date": "2026-07-01",
+  "assets": {
+    "directory": "./dist",
+    // both /about and /about/ resolve (default) — avoids the reference site's 404 bug
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // custom domains attached at cutover (owner-confirmed step):
+  // "routes": [
+  //   { "pattern": "karanshergill.com", "custom_domain": true },
+  //   { "pattern": "www.karanshergill.com", "custom_domain": true }
+  // ]
+}

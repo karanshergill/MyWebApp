@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-# Ref: https://developers.google.com/search/docs/advanced/robots/create-robots-txt
+Sitemap: https://karanshergill.com/sitemap-index.xml

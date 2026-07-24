@@ -1,0 +1,23 @@
+---
+import PageLayout from './PageLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  minutesRead: number;
+}
+const { post, minutesRead } = Astro.props;
+const { title, description, pubDate, updatedDate } = post.data;
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }).toLowerCase();
+---
+
+<PageLayout title={`${title} | Karan Shergill`} description={description} active="blog" ogType="article">
+  <h1 class="page-title">{title}</h1>
+  <p class="post-meta">
+    <time datetime={pubDate.toISOString()}>{fmt(pubDate)}</time>
+    &middot; {minutesRead} min read
+    {updatedDate && <> &middot; updated {fmt(updatedDate)}</>}
+  </p>
+  <slot />
+</PageLayout>

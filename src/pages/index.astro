@@ -1,39 +1,114 @@
 ---
-import Head from "../components/Head.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
-import Footer from "../components/Footer.astro";
-import Email from "../components/Email.astro";
-import "../styles/globals.css";
-import "../styles/index.css";
+import SketchbookLayout from '../layouts/SketchbookLayout.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import SketchNote from '../components/SketchNote.astro';
+import LayoutGuide from '../components/LayoutGuide.astro';
+import TodoList from '../components/TodoList.astro';
+import SocialRow from '../components/SocialRow.astro';
+import ScrambleQuote from '../components/ScrambleQuote.astro';
+import { TOOLTIP_MAP } from '../data/site';
+
+// DRAFT jokes — owner reviews before cutover (spec FR-009)
+const todos = [
+  { label: 'build the tools', done: true },
+  { label: 'hack the planet (legally)', done: true },
+  {
+    label: 'ship algotrix',
+    done: false,
+    msgs: ["it's in backtesting, ok?", "the market isn't ready", 'seriously?', '...', 'stop it.'],
+  },
+  { label: 'touch grass', done: false, msgs: ['grass is out of scope', 'oi', '...', 'stop it.'] },
+];
 ---
 
-<html lang="en">
-  <Head />
-  <body class="bg-home-background">
-    <canvas
-      id="canvas"
-      class="fixed top-0 left-0 w-full h-full pointer-events-none"
-    >
-    </canvas>
-    <div class="flex flex-col items-center">
-      <header class="w-5/6 mt-6">
-        <!-- <Header /> -->
-      </header>
-      <main class="w-5/6 md:mt-10">
-        <Hero />
-      </main>
-    </div>
-    <Footer />
+<SketchbookLayout title="Security Researcher & Developer | Karan Shergill">
+  <main class="homepage" id="main-content">
+    <h1 class="sr-only">Karan Shergill — Full-Stack Software Engineer &amp; Security Researcher</h1>
 
-    <!-- <div class="scene">
-      <div class="rocket">
-        <img src="rocket.png" alt="Rocket" />
+    <nav class="menu" aria-label="primary">
+      <div class="menuline">
+        <span class="menuheader" aria-hidden="true">[meta]</span>
+        <span class="menulinks">
+          <a href="/about" data-tip={TOOLTIP_MAP['/about']}>about</a>,
+          <span class="sketch-anchor">
+            <a href="/work" data-tip={TOOLTIP_MAP['/work']}>work with me</a>
+            <SketchNote text="selectively available" placement="note-right" seed={31} />
+          </span>
+        </span>
       </div>
-    </div> -->
+      <div class="menuline">
+        <span class="menuheader" aria-hidden="true">[tech]</span>
+        <span class="menulinks">
+          <span class="sketch-anchor">
+            <a href="/projects" data-tip={TOOLTIP_MAP['/projects']}>projects</a>
+            <SketchNote text="recon, trading, saas" placement="note-left" seed={37} />
+          </span>,
+          <span class="sketch-anchor">
+            <a href="/blog" data-tip={TOOLTIP_MAP['/blog']}>blog</a>
+            <SketchNote text="research & rants" placement="note-right-far" seed={41} />
+          </span>
+        </span>
+      </div>
+      <div class="menuline misc-line">
+        <span class="menuheader" aria-hidden="true">[misc]</span>
+        <span class="menulinks">
+          <a href="/gallery" data-tip={TOOLTIP_MAP['/gallery']}>gallery</a>
+        </span>
+        <LayoutGuide label="5vh" />
+      </div>
+    </nav>
 
-    <!-- import animation dependencies -->
-    <!-- <script src="../scripts/bg_rocket.js"></script> -->
-    <script src="../scripts/bg_stardust.js"></script>
-  </body>
-</html>
+    <SocialRow note="i reply.">
+      <div class="mobile-footer">
+        <nav aria-label="more">
+          <a href="/now">my life rn</a>
+          <a href="/uses">what i use</a>
+        </nav>
+      </div>
+    </SocialRow>
+  </main>
+
+  <div class="corner-layer">
+    <div class="corner-annotation top-left" aria-hidden="true">
+      <ScrambleQuote />
+    </div>
+    <div class="corner-annotation top-right">
+      <ThemeSwitcher />
+    </div>
+    <div class="corner-annotation bottom-left">
+      <TodoList items={todos} />
+    </div>
+    <div class="corner-annotation bottom-right">
+      <nav aria-label="more">
+        <a href="/now" data-tip={TOOLTIP_MAP['/now']}>my life rn</a><br />
+        <a href="/uses" data-tip={TOOLTIP_MAP['/uses']}>what i use</a>
+      </nav>
+    </div>
+  </div>
+</SketchbookLayout>
+
+<script>
+  // [meta] → {meta} / (meta) / :meta: / |meta| on hover — pure whimsy
+  const PAIRS = [
+    ['{', '}'],
+    ['(', ')'],
+    [':', ':'],
+    ['|', '|'],
+  ];
+  function init() {
+    document.querySelectorAll<HTMLElement>('.menuheader').forEach((m) => {
+      if (m.dataset.bound) return;
+      m.dataset.bound = '1';
+      const word = (m.textContent || '').trim().replace(/^.|.$/g, '');
+      const line = m.closest('.menuline');
+      line?.addEventListener('mouseenter', () => {
+        const p = PAIRS[Math.floor(Math.random() * PAIRS.length)];
+        m.textContent = p[0] + word + p[1];
+      });
+      line?.addEventListener('mouseleave', () => {
+        m.textContent = '[' + word + ']';
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

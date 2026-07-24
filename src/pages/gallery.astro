@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+// Gallery ships wired but empty until the owner supplies photos + real alt text
+// (spec assumption). When src/content/gallery has entries, the grid + PhotoSwipe
+// lightbox light up automatically.
+const photos = (await getCollection('gallery')).sort((a, b) => a.data.order - b.data.order);
+const hasPhotos = photos.length > 0;
+---
+
+<PageLayout title="Gallery | Karan Shergill" description="Photographs — proof I go outside." active="gallery" wide>
+  <h1 class="page-title">gallery</h1>
+  {!hasPhotos && (
+    <p class="coming-soon">shot on whatever was in my pocket. <span aria-hidden="true">coming soon.</span></p>
+  )}
+  {hasPhotos && <p class="coming-soon">gallery grid renders here once photos are added.</p>}
+</PageLayout>
+
+<style>
+  .coming-soon {
+    font-family: var(--font-hand);
+    color: var(--ink);
+    font-size: var(--hand-md);
+    opacity: 0.85;
+    transform: rotate(-1deg);
+    margin-top: 2rem;
+  }
+</style>

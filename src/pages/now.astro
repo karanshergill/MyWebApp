@@ -1,0 +1,31 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import StickyNoteList from '../components/StickyNoteList.astro';
+// DRAFT copy — owner reviews (spec FR-009). A /now page: https://nownownow.com/about
+const sections = [
+  {
+    label: 'building',
+    items: [
+      { text: 'AlgoTrix — multi-agent trading pipeline', note: 'the market is a very expensive teacher' },
+      { text: 'Basiq360 platform work', note: 'CTO hat, firmly on' },
+    ],
+  },
+  {
+    label: 'hunting',
+    items: [{ text: 'targets on HackerOne', note: "can't tell you. NDA." }],
+  },
+  {
+    label: 'learning',
+    items: [{ text: 'marketing (reluctantly)', note: 'turns out you have to tell people' }],
+  },
+  {
+    label: 'waiting for',
+    items: [{ text: 'the next great heist movie', note: 'recon, but with a soundtrack' }],
+  },
+];
+---
+
+<PageLayout title="Now | Karan Shergill" description="What I'm focused on right now." active="about" wide>
+  <h1 class="page-title">my life rn</h1>
+  <StickyNoteList updated="jul 2026" sections={sections} />
+</PageLayout>

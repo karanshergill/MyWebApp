@@ -1,0 +1,34 @@
+/* Print styles for reading pages: drop chrome, reveal link URLs. */
+@media print {
+  .site-header,
+  .skip-link,
+  .corner-layer,
+  .hand-tooltip,
+  .page-footer {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .page-view {
+    padding: 0;
+  }
+  .wrapper,
+  .wrapper.wide {
+    max-width: 100%;
+  }
+  .wrapper a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #444;
+  }
+  pre {
+    white-space: pre-wrap;
+    border: 1px solid #ccc;
+  }
+  @page {
+    margin: 2cm;
+  }
+}

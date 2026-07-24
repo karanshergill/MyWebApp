@@ -1,0 +1,33 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import StickyNoteList from '../components/StickyNoteList.astro';
+// DRAFT copy — owner reviews (spec FR-009). A /uses page: https://uses.tech
+const sections = [
+  {
+    label: 'hardware',
+    items: [
+      { text: 'a laptop that runs too hot', note: 'compiling is cardio' },
+      { text: 'mechanical keyboard', note: 'the office hates it' },
+    ],
+  },
+  {
+    label: 'software',
+    items: [
+      { text: 'neovim', note: 'yes, i can exit it' },
+      { text: 'the terminal, mostly', note: 'GUIs are for other people' },
+    ],
+  },
+  {
+    label: 'security & recon',
+    items: [
+      { text: 'Burp Suite', note: 'the other half of my salary' },
+      { text: 'my own tools', note: 'if it annoyed me twice, i wrote a CLI' },
+    ],
+  },
+];
+---
+
+<PageLayout title="Uses | Karan Shergill" description="The gear and software behind the terminal." active="about" wide>
+  <h1 class="page-title">what i use</h1>
+  <StickyNoteList sections={sections} />
+</PageLayout>

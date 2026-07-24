@@ -1,0 +1,75 @@
+---
+interface Item {
+  label: string;
+  done: boolean;
+  msgs?: string[];
+}
+interface Props {
+  heading?: string;
+  items: Item[];
+}
+const { heading = 'todo:', items } = Astro.props;
+---
+
+<div style="margin-bottom: 0.2rem" aria-hidden="true">{heading}</div>
+<ul class="todo-list">
+  {items.map((item) =>
+    item.done ? (
+      <li><span class="checkbox" aria-hidden="true">&#10003;</span>{item.label}</li>
+    ) : (
+      <li>
+        <button type="button" class="todo-btn" data-msgs={JSON.stringify(item.msgs ?? ['not yet...'])}>
+          <span class="checkbox" aria-hidden="true">&#9633;</span>{item.label}
+        </button>
+      </li>
+    )
+  )}
+</ul>
+<span class="sr-only" role="status" aria-live="polite" data-todo-status></span>
+
+<script>
+  function init() {
+    const status = document.querySelector<HTMLElement>('[data-todo-status]');
+    document.querySelectorAll<HTMLButtonElement>('.todo-btn').forEach((btn) => {
+      if (btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      const msgs: string[] = JSON.parse(btn.dataset.msgs || '[]');
+      let idx = 0;
+      let busy = false;
+      const box = btn.querySelector<HTMLElement>('.checkbox')!;
+      const orig = box.textContent;
+      btn.addEventListener('click', () => {
+        if (busy) return;
+        busy = true;
+        if (idx >= msgs.length) {
+          const corner = btn.closest<HTMLElement>('.corner-annotation');
+          if (corner) corner.innerHTML = '<span class="todo-punchline">:p</span>';
+          if (status) status.textContent = ':p';
+          return;
+        }
+        box.textContent = '✓';
+        setTimeout(() => {
+          box.textContent = orig;
+          btn.classList.add('todo-shake');
+          const m = msgs[idx++];
+          let bubble = btn.querySelector<HTMLElement>('.todo-msg');
+          if (!bubble) {
+            bubble = document.createElement('span');
+            bubble.className = 'todo-msg';
+            btn.appendChild(bubble);
+          }
+          bubble.textContent = m;
+          bubble.classList.remove('show');
+          void bubble.offsetWidth;
+          bubble.classList.add('show');
+          if (status) status.textContent = m;
+          setTimeout(() => {
+            btn.classList.remove('todo-shake');
+            busy = false;
+          }, 420);
+        }, 200);
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

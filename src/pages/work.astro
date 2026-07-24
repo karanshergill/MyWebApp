@@ -1,0 +1,93 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+// DRAFT copy — owner reviews before cutover (spec FR-009).
+---
+
+<PageLayout title="Work With Me | Karan Shergill" description="Selectively available for security-product R&D and product engineering." active="about">
+  <h1 class="page-title">work with me</h1>
+  <p class="lede">
+    I help companies find and fix what their scanners miss — and build the products that do it.
+    <span class="scope-note" aria-hidden="true">selectively available</span>
+  </p>
+
+  <h2 class="section-title">what i do</h2>
+  <ul class="arrow-list">
+    <li>Offensive-security tooling &amp; recon automation R&amp;D.</li>
+    <li>Product engineering / fractional CTO for security &amp; SaaS teams.</li>
+  </ul>
+
+  <h2 class="section-title">why me</h2>
+  <ul class="arrow-list">
+    <li>Tools I've built are used across the recon community.</li>
+    <li>I'm a CTO shipping real revenue SaaS, not just slides.</li>
+    <li>Security research track record at HackerOne.</li>
+  </ul>
+
+  <h2 class="section-title">how it works</h2>
+  <ol class="arrow-list">
+    <li>A 30-minute intro call to see if it's a fit.</li>
+    <li>24 hours of ground work — I scope the actual problem.</li>
+    <li>A clear go / no-go. <strong>No charge in case of no-go.</strong></li>
+  </ol>
+
+  <p class="cta">
+    <a class="cta-btn" href="mailto:email[at]karanshergill.com">start a conversation</a>
+    <span class="reply-note" aria-hidden="true">i reply within a day.</span>
+  </p>
+
+  <p class="disclaimer">
+    Not the right fit for: compliance paperwork, "quick hack" requests, or equity-only work.
+  </p>
+</PageLayout>
+
+<style>
+  .lede {
+    position: relative;
+    font-size: 1.1em;
+  }
+  .scope-note,
+  .reply-note {
+    font-family: var(--font-hand);
+    color: var(--ink);
+    opacity: 0.8;
+    display: inline-block;
+    margin-left: 0.6rem;
+    transform: rotate(-2deg);
+  }
+  .arrow-list {
+    list-style: none;
+    padding: 0;
+  }
+  .arrow-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin: 0.6rem 0;
+  }
+  .arrow-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+  }
+  .cta {
+    margin: 2rem 0 1rem;
+  }
+  .cta-btn {
+    display: inline-block;
+    border: 1.5px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  .cta-btn:hover {
+    background: var(--accent-color);
+    color: var(--on-accent);
+  }
+  .disclaimer {
+    color: var(--muted-color);
+    font-size: 0.9em;
+  }
+</style>

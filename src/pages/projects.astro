@@ -1,0 +1,138 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<PageLayout title="Projects | Karan Shergill" description="Recon tools, trading systems, and SaaS." active="projects" wide>
+  <h1 class="page-title">projects</h1>
+
+  <div class="impact-container">
+    <span class="updated-scribble" aria-hidden="true">updated: jul 2026</span>
+    <div class="impact-summary">
+      <div class="impact-item"><div class="impact-num">10+</div><div class="impact-label">security tools</div></div>
+      <div class="impact-item"><div class="impact-num">3</div><div class="impact-label">products shipped</div></div>
+      <div class="impact-item"><div class="impact-num">2</div><div class="impact-label">domains: offense &amp; markets</div></div>
+    </div>
+  </div>
+
+  {projects.map((p) => (
+    <a class="proj-card" href={p.data.url} target="_blank" rel="noopener noreferrer">
+      <div class="proj-header">
+        <span class="proj-name">{p.data.name}</span>
+        {p.data.stars && <span class="stars-pill">★ {p.data.stars}</span>}
+      </div>
+      <div class="proj-summary">
+        <div><b>what</b>{p.data.what}</div>
+        <div><b>why</b>{p.data.why}</div>
+        <div><b>how</b>{p.data.how}</div>
+      </div>
+    </a>
+  ))}
+
+  <p class="closer">…and dozens more experiments on <a href="https://github.com/karanshergill" target="_blank" rel="noopener noreferrer">github</a>.</p>
+</PageLayout>
+
+<style>
+  .impact-container {
+    position: relative;
+    margin: 2.2rem 0;
+  }
+  .impact-summary {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    background: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.2rem 1.6rem;
+    flex-wrap: wrap;
+  }
+  .impact-item {
+    text-align: center;
+    flex: 1;
+    min-width: 140px;
+  }
+  .impact-num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: var(--accent-color);
+    font-variant-numeric: tabular-nums;
+  }
+  .impact-label {
+    font-size: 0.85rem;
+    color: var(--muted-color);
+  }
+  .updated-scribble {
+    position: absolute;
+    top: -1.7rem;
+    right: 0.4rem;
+    font-family: var(--font-hand);
+    color: var(--ink);
+    opacity: 0.8;
+    font-size: var(--hand-2xs);
+    transform: rotate(-3deg);
+  }
+  .proj-card {
+    display: block;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.3rem 1.5rem;
+    margin: 1.2rem 0;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+    color: var(--foreground-color);
+    text-decoration: none;
+  }
+  .proj-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-color);
+    background: transparent;
+  }
+  .proj-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .proj-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .stars-pill {
+    font-size: 0.8rem;
+    color: var(--muted-color);
+    background: var(--code-bg);
+    border-radius: 99px;
+    padding: 0.15rem 0.6rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .proj-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    margin-top: 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .proj-summary b {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted-color);
+    margin-bottom: 0.2rem;
+  }
+  .closer {
+    text-align: center;
+    color: var(--muted-color);
+    margin: 2.4rem 0 0;
+  }
+  @media (max-width: 800px) {
+    .proj-summary {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

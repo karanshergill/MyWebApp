@@ -1,0 +1,74 @@
+[
+  {
+    "id": "goblin",
+    "name": "goblin",
+    "what": "Fast subdomain enumeration across passive sources and permutation engines.",
+    "why": "Recon lives or dies on coverage; existing tools traded speed for depth.",
+    "how": "Go, concurrent source adapters, resolver pools from rexolvers.",
+    "url": "https://github.com/karanshergill",
+    "order": 1
+  },
+  {
+    "id": "nullscope",
+    "name": "nullscope",
+    "what": "Discover every domain an organization owns via RDAP + CT log pivoting.",
+    "why": "Scope discovery is the highest-leverage step of any engagement.",
+    "how": "Registration-data graph walks cross-referenced with certificate SANs.",
+    "url": "https://github.com/karanshergill",
+    "order": 2
+  },
+  {
+    "id": "certsight",
+    "name": "certsight",
+    "what": "Certificate recon CLI — intelligence extraction from X.509 via CT logs.",
+    "why": "Certificates leak infrastructure topology nobody meant to publish.",
+    "how": "Streaming CT ingestion, structured SAN/issuer/temporal analysis.",
+    "url": "https://github.com/karanshergill",
+    "order": 3
+  },
+  {
+    "id": "ctlogger",
+    "name": "ctlogger",
+    "what": "Monitor and record Certificate Transparency logs in real time.",
+    "why": "New certificates are an early signal of new infrastructure and phishing.",
+    "how": "Long-running CT log follower writing structured records.",
+    "url": "https://github.com/karanshergill/ctlogger",
+    "order": 4
+  },
+  {
+    "id": "cloudsurfer",
+    "name": "cloudsurfer",
+    "what": "Cloud asset reconnaissance — surface exposed cloud resources.",
+    "why": "Cloud sprawl is where modern attack surface actually hides.",
+    "how": "Go, multi-provider enumeration and correlation.",
+    "url": "https://github.com/karanshergill",
+    "order": 5
+  },
+  {
+    "id": "rexolvers",
+    "name": "rexolvers",
+    "what": "Fetch fresh, working DNS resolver lists from multiple sources.",
+    "why": "Every recon pipeline needs reliable resolvers; stale lists waste runs.",
+    "how": "Aggregates and validates public resolver sources.",
+    "url": "https://github.com/karanshergill/rexolvers",
+    "order": 6
+  },
+  {
+    "id": "algotrix",
+    "name": "algotrix",
+    "what": "NSE algo-trading platform: tick recorder, OHLCV pipeline, LLM consensus signals.",
+    "why": "Markets are an adversarial system too — same instincts, different target.",
+    "how": "Go feeds + TimescaleDB + a multi-agent quant scanner. (private)",
+    "url": "https://github.com/karanshergill",
+    "order": 7
+  },
+  {
+    "id": "pharmax",
+    "name": "pharmax",
+    "what": "Multi-tenant eQMS SaaS for regulated Indian SMEs — audit-ready compliance workflows.",
+    "why": "Compliance software for SMEs is stuck in the spreadsheet era.",
+    "how": "Modern multi-tenant stack with industry templates and mobile-friendly UX.",
+    "url": "https://github.com/karanshergill",
+    "order": 8
+  }
+]

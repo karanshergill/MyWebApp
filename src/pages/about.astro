@@ -1,17 +1,38 @@
 ---
-import HEAD from "../components/Head.astro";
+import PageLayout from '../layouts/PageLayout.astro';
+// DRAFT copy — owner reviews before cutover (spec FR-009). Roles per owner.
 ---
 
-<HEAD />
-<body>
-  <div
-    class="min-h-screen bg-gray-900 flex flex-col items-center justify-center"
-  >
-    <h1 class="text-5xl text-white font-bold mb-8 animate-pulse">
-      Coming Soon
-    </h1>
-    <p class="text-white text-lg mb-8">
-      I am working hard to bring you something amazing. Stay tuned!
-    </p>
-  </div>
-</body>
+<PageLayout title="About | Karan Shergill" description="Full-stack engineer by day, security researcher by night." active="about">
+  <h1 class="page-title">about</h1>
+
+  <p>
+    I'm Karan — a full-stack software engineer by day and a security researcher by night.
+    I've spent years on both sides of the same instinct: building systems that work, and
+    figuring out how they break.
+  </p>
+  <p>
+    These days that splits three ways. I do security research at <strong>HackerOne</strong>,
+    I'm the <strong>CTO of Basiq360</strong> (a retail-intelligence and product-authentication
+    SaaS), and I co-founded <strong>Litass</strong>. In between, I build recon tooling the
+    bug-bounty community actually uses and an algorithmic-trading stack for the Indian markets.
+  </p>
+  <p>
+    Away from the terminal I shoot photos, chase mountains, and lose arguments with my cats.
+    <span class="about-note" aria-hidden="true">(the cats always win)</span>
+  </p>
+
+  <p style="margin-top:2rem">
+    <a href="/work">work with me</a> &middot; <a href="/now">what i'm doing now</a> &middot;
+    <a href="mailto:email[at]karanshergill.com">say hello</a>
+  </p>
+</PageLayout>
+
+<style>
+  .about-note {
+    font-family: var(--font-hand);
+    color: var(--ink);
+    opacity: 0.8;
+    margin-left: 0.4rem;
+  }
+</style>

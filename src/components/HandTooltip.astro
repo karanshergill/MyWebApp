@@ -1,0 +1,65 @@
+---
+import { tipBucketPaths, TIP_BUCKETS, TIP_HEIGHT } from '../lib/rough';
+
+// Wobbly borders are pre-rendered at build (roughjs, seeded) into a symbol
+// sprite; the runtime only picks the nearest width bucket. Zero drawing JS.
+const buckets = tipBucketPaths();
+---
+
+<svg style="display:none" aria-hidden="true">
+  {buckets.map(({ w, paths }) => (
+    <symbol id={`tipbox-${w}`} viewBox={`0 0 ${w} ${TIP_HEIGHT}`}>
+      {paths.map((d) => (
+        <path d={d} fill="none" stroke="currentColor" stroke-width="1.5"></path>
+      ))}
+    </symbol>
+  ))}
+</svg>
+
+<div class="hand-tooltip" aria-hidden="true" data-buckets={TIP_BUCKETS.join(',')} data-height={TIP_HEIGHT}>
+  <svg class="tip-box" preserveAspectRatio="none"><use href={`#tipbox-${TIP_BUCKETS[0]}`}></use></svg>
+  <span class="tip-text"></span>
+</div>
+
+<script>
+  function init() {
+    const tip = document.querySelector<HTMLElement>('.hand-tooltip');
+    if (!tip || tip.dataset.bound) return;
+    const el = tip;
+    el.dataset.bound = '1';
+    const text = el.querySelector<HTMLElement>('.tip-text')!;
+    const box = el.querySelector<SVGSVGElement>('svg.tip-box')!;
+    const use = box.querySelector('use')!;
+    const buckets = (el.dataset.buckets || '').split(',').map(Number);
+    const height = Number(el.dataset.height || 64);
+
+    function show(caption: string) {
+      text.textContent = caption;
+      requestAnimationFrame(() => {
+        const need = text.offsetWidth + 56;
+        const w = buckets.find((b) => b >= need) ?? buckets[buckets.length - 1];
+        use.setAttribute('href', `#tipbox-${w}`);
+        box.setAttribute('viewBox', `0 0 ${w} ${height}`);
+        el.style.opacity = '1';
+      });
+    }
+    function hide() {
+      el.style.opacity = '0';
+    }
+
+    document.addEventListener('pointerover', (e) => {
+      const a = (e.target as Element).closest<HTMLElement>('[data-tip]');
+      if (a?.dataset.tip) show(a.dataset.tip);
+    });
+    document.addEventListener('pointerout', (e) => {
+      if ((e.target as Element).closest('[data-tip]')) hide();
+    });
+    document.addEventListener('focusin', (e) => {
+      const a = (e.target as Element).closest<HTMLElement>('[data-tip]');
+      if (a?.dataset.tip) show(a.dataset.tip);
+      else hide();
+    });
+    document.addEventListener('focusout', () => hide());
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

@@ -1,0 +1,21 @@
+---
+import { sketchArrow } from '../lib/rough';
+
+interface Props {
+  text: string;
+  placement: 'note-right' | 'note-left' | 'note-right-far' | 'note-bottom';
+  arrow?: boolean;
+  seed?: number;
+}
+const { text, placement, arrow = false, seed = 7 } = Astro.props;
+const arrowPaths = arrow ? sketchArrow(36, seed) : [];
+---
+
+<span class:list={['sketch-note', placement]} aria-hidden="true">
+  <span class="sketch-text">{text}</span>
+  {arrow && (
+    <svg class="sketch-arrow" width="40" height="16" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+      {arrowPaths.map((d) => <path d={d}></path>)}
+    </svg>
+  )}
+</span>

@@ -1,0 +1,46 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import HandTooltip from '../components/HandTooltip.astro';
+import '../styles/home.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <slot />
+  <HandTooltip />
+</BaseLayout>
+
+<script>
+  // seeded handwriting jitter: deterministic per text — the same page of the
+  // sketchbook on every visit. Skipped under reduced motion.
+  function seededRand(seed: number) {
+    return () => {
+      const x = Math.sin(seed++) * 1e4;
+      return x - Math.floor(x);
+    };
+  }
+  function seedOf(str: string) {
+    let s = 0;
+    for (let i = 0; i < str.length; i++) s += str.charCodeAt(i);
+    return s;
+  }
+  function init() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document
+      .querySelectorAll<HTMLElement>('.corner-annotation, .sketch-note, .todo-btn')
+      .forEach((el) => {
+        if (el.dataset.jittered) return;
+        el.dataset.jittered = '1';
+        const r = seededRand(seedOf(el.textContent || 'x'));
+        const scale = 0.92 + 0.16 * r();
+        const px = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = px * scale + 'px';
+      });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

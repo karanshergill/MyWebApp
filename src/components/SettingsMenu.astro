@@ -1,0 +1,105 @@
+---
+import ThemeSwitcher from './ThemeSwitcher.astro';
+---
+
+<span class="settings-wrap">
+  <button class="gear-btn" id="settings-toggle" aria-label="Settings" aria-expanded="false" aria-controls="settings-menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12.2 8.1c2.1 0 3.9 1.8 3.8 3.9 0 2.1-1.8 3.9-4 3.9-2.1-.1-3.8-1.8-3.8-4 .1-2.1 1.8-3.8 4-3.8z"></path>
+      <path d="M10.1 2.6h3.8l.5 2.5 2.2 1.2 2.4-.9 1.9 3.3-1.9 1.7v2.4l1.9 1.6-1.9 3.3-2.4-.8-2.2 1.3-.5 2.4h-3.8l-.4-2.4-2.3-1.3-2.3.8-1.9-3.2 1.8-1.7v-2.4L3.2 8.7l1.9-3.3 2.4.9 2.2-1.2z"></path>
+    </svg>
+  </button>
+  <div class="settings-menu" id="settings-menu" hidden>
+    <h3>theme</h3>
+    <ThemeSwitcher size={30} />
+    <h3>font</h3>
+    <div class="settings-options" id="font-options">
+      <button data-font="lexend" aria-pressed="true">Lexend</button>
+      <button data-font="system" aria-pressed="false">System</button>
+      <button data-font="dyslexic" aria-pressed="false">Dyslexic</button>
+    </div>
+    <h3>font size</h3>
+    <div class="settings-options">
+      <button id="font-dec" aria-label="Decrease font size">&minus;</button>
+      <button id="font-reset">Reset</button>
+      <button id="font-inc" aria-label="Increase font size">+</button>
+    </div>
+  </div>
+</span>
+
+<script>
+  const FONTS: Record<string, string> = {
+    lexend: 'var(--font-body)',
+    system: "system-ui, 'Segoe UI', Roboto, sans-serif",
+    dyslexic: 'var(--font-dyslexic)',
+  };
+  function safeGet(k: string): string | null {
+    try {
+      return localStorage.getItem(k);
+    } catch {
+      return null;
+    }
+  }
+  function safeSet(k: string, v: string) {
+    try {
+      localStorage.setItem(k, v);
+    } catch {
+      /* storage unavailable */
+    }
+  }
+  function applyFont(f: string) {
+    if (!FONTS[f]) return;
+    document.documentElement.style.setProperty('--blog-font-family', FONTS[f]);
+    document.querySelectorAll<HTMLButtonElement>('#font-options button').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.font === f));
+    });
+  }
+  function applySize(rem: number) {
+    const clamped = Math.max(0.7, Math.min(2.5, rem));
+    document.documentElement.style.setProperty('--blog-font-size', clamped.toFixed(1) + 'rem');
+    safeSet('fontSize', clamped.toFixed(1));
+    return clamped;
+  }
+  function init() {
+    const toggle = document.getElementById('settings-toggle');
+    const menu = document.getElementById('settings-menu');
+    if (!toggle || !menu || toggle.dataset.bound) return;
+    toggle.dataset.bound = '1';
+
+    toggle.addEventListener('click', () => {
+      const open = menu.hasAttribute('hidden');
+      if (open) menu.removeAttribute('hidden');
+      else menu.setAttribute('hidden', '');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target as Node) && !toggle.contains(e.target as Node)) {
+        menu.setAttribute('hidden', '');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hasAttribute('hidden')) {
+        menu.setAttribute('hidden', '');
+        toggle.setAttribute('aria-expanded', 'false');
+        (toggle as HTMLElement).focus();
+      }
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('#font-options button').forEach((b) => {
+      b.addEventListener('click', () => {
+        applyFont(b.dataset.font!);
+        safeSet('font', b.dataset.font!);
+      });
+    });
+    let size = parseFloat(safeGet('fontSize') || '1') || 1;
+    document.getElementById('font-dec')?.addEventListener('click', () => (size = applySize(size - 0.1)));
+    document.getElementById('font-inc')?.addEventListener('click', () => (size = applySize(size + 0.1)));
+    document.getElementById('font-reset')?.addEventListener('click', () => (size = applySize(1)));
+
+    // restore persisted prefs
+    applyFont(safeGet('font') || 'lexend');
+    if (safeGet('fontSize')) applySize(size);
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

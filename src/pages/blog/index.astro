@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toLowerCase();
+---
+
+<PageLayout title="Blog | Karan Shergill" description="Research, hacking, and the occasional rant." active="blog">
+  <h1 class="page-title">blog</h1>
+  <ul class="post-list">
+    {posts.map((post) => (
+      <li>
+        <a href={`/blog/${post.id}`}>{post.data.title}</a>
+        <span class="post-date" aria-hidden="true">{fmt(post.data.pubDate)}</span>
+      </li>
+    ))}
+  </ul>
+</PageLayout>

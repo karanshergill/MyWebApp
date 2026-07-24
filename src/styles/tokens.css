@@ -1,0 +1,75 @@
+/* Design tokens — 3 themes. AA-verified (see specs/001 plan §Technical Context).
+   Handwriting rides --ink; accent pairs with --on-accent. No hard-coded colors
+   anywhere else (constitution II). */
+:root {
+  --background-color: #fafafa;
+  --foreground-color: #1a1a1a;
+  --midground-color: #666;
+  --accent-color: #1565c0;      /* 5.50:1 on #fafafa */
+  --on-accent: #fff;            /* 5.75:1 on #1565c0 */
+  --link-hover-bg: #e5e5e5;
+  --muted-color: #666;
+  --border-color: #e5e5e5;
+  --code-bg: #f0f0f0;
+  --link-color: #0b5394;
+  --link-visited: #0d47a1;
+  --ink: #0d47a1;
+  --scribble: #c62828;
+  --selection-bg: #ffe97d;
+  --selection-fg: #1a1a1a;
+
+  /* type roles — font families come from the Astro Fonts API variables
+     (--font-hand, --font-display, --font-body, --font-dyslexic) */
+  --blog-font-family: var(--font-body);
+  --blog-font-size: 1rem;
+
+  /* handwriting scale (reference × 0.9 for Excalifont metrics) */
+  --hand-xl: 2.15rem;
+  --hand-lg: 1.95rem;
+  --hand-md: 1.45rem;
+  --hand-sm: 1.4rem;
+  --hand-xs: 1.3rem;
+  --hand-2xs: 1rem;
+
+  /* fluid scale */
+  --text-menu: clamp(1.2rem, 2.4vw, 2.3rem);
+  --text-h1: clamp(2rem, 1.5rem + 2.2vw, 2.65rem);
+  --text-h2: clamp(1.6rem, 1.3rem + 1.4vw, 2rem);
+  --text-list: clamp(1.35rem, 1.2rem + 0.7vw, 1.7rem);
+}
+
+.dark-mode {
+  --background-color: #1e1e1e;
+  --foreground-color: #e0e0e0;
+  --midground-color: #a0a0a0;
+  --accent-color: #42a5f5;      /* 6.30:1 on #1e1e1e */
+  --on-accent: #1e1e1e;         /* 6.30:1 on #42a5f5 */
+  --link-hover-bg: #333;
+  --muted-color: #888;
+  --border-color: #333;
+  --code-bg: #2d2d2d;
+  --link-color: #64b5f6;
+  --link-visited: #a6d6ff;
+  --ink: #a6d6ff;
+  --scribble: #ef5350;
+  --selection-bg: #d6c64a;
+  --selection-fg: #1e1e1e;
+}
+
+.cream-mode {
+  --background-color: #f3f0e6;
+  --foreground-color: #2d2a26;
+  --midground-color: #5d564f;
+  --accent-color: #1565c0;      /* 5.04:1 on #f3f0e6 */
+  --on-accent: #fff;
+  --link-hover-bg: #e6e2d6;
+  --muted-color: #5d564f;
+  --border-color: #dcd6c6;
+  --code-bg: #e8e2d2;
+  --link-color: #0d47a1;
+  --link-visited: #0d47a1;
+  --ink: #0d47a1;
+  --scribble: #b71c1c;
+  --selection-bg: #f5dd6d;
+  --selection-fg: #2d2a26;
+}

@@ -1,0 +1,78 @@
+---
+import { SITE, TOOLTIP_MAP } from '../data/site';
+import SketchNote from './SketchNote.astro';
+
+interface Props {
+  note?: string;
+}
+const { note } = Astro.props;
+
+const links = [
+  { icon: 'github', href: SITE.socials.github, label: 'GitHub' },
+  { icon: 'x', href: SITE.socials.x, label: 'X (Twitter)' },
+  { icon: 'linkedin', href: SITE.socials.linkedin, label: 'LinkedIn' },
+  { icon: 'instagram', href: SITE.socials.instagram, label: 'Instagram' },
+  { icon: 'mail', href: `mailto:${SITE.email}`, label: 'Email' },
+];
+
+// hand-drawn single-stroke icons (approved in the design mock)
+const ICONS: Record<string, string[]> = {
+  github: [
+    'M12.2 2.3c5.4-.2 9.6 4.2 9.5 9.5-.1 5.5-4.5 9.7-9.7 9.9-5.3.2-9.8-4.4-9.7-9.8.1-5.2 4.4-9.4 9.9-9.6z',
+    'M14.4 19v-1.9c0-.6-.2-1.1-.6-1.5 2.1-.3 4.2-1 4.2-4.6 0-.9-.3-1.8-1-2.4.3-.8.3-1.7-.1-2.5 0 0-.8-.2-2.6 1a9 9 0 0 0-4.7 0c-1.8-1.2-2.6-1-2.6-1-.4.8-.4 1.7-.1 2.5-.6.7-1 1.5-1 2.4 0 3.6 2.2 4.3 4.3 4.6-.3.4-.5.9-.5 1.5V19',
+    'M9.7 17.7c-2 .6-3.6 0-4.6-1.9',
+  ],
+  x: [
+    'M4.2 3.4c2.5 3.2 5.1 6.5 7.7 9.7 2.7 3.3 5.3 6.4 8 9.5',
+    'M19.6 3.2c-2.3 2.8-4.6 5.7-7 8.4-2.8 3.3-5.6 6.6-8.4 9.9',
+  ],
+  linkedin: [
+    'M20.8 8.2c.2-2.6-1.9-5-4.6-5-2.7-.1-5.5 0-8.2 0-2.7 0-5 2.2-5 4.9v8c0 2.7 2.3 4.9 5 4.9h8c2.7 0 4.7-2.2 4.8-4.9z',
+    'M7.1 17.1v-6.9',
+    'M11.2 17V13.4M11.2 10.1v3.3m0 0c.1-3.6 6-3.5 5.9.2v3.5',
+    'M7 7.2l.1-.1',
+  ],
+  instagram: [
+    'M3.2 15.9V8.2c0-2.8 2.2-5 5-5.1 2.6 0 5.2 0 7.8.1 2.7 0 4.8 2.3 4.8 5v7.6c0 2.8-2.3 5-5.1 5-2.5 0-5 .1-7.5 0-2.8 0-5-2.2-5-4.9z',
+    'M12.1 8c2.2 0 4 1.9 3.9 4.1-.1 2.1-1.9 3.9-4.1 3.9-2.2-.1-3.9-1.9-3.9-4.1.1-2.2 1.9-3.9 4.1-3.9z',
+    'M17.4 6.5v.1',
+  ],
+  mail: [
+    'M2.2 16.9V7.1c0-1.1.9-2 2-2.1 5.2-.1 10.4-.1 15.6 0 1.1 0 2 1 2 2.1v9.8c0 1.1-.9 2-2 2-5.2.1-10.4.1-15.6 0-1.1 0-2-.9-2-2z',
+    'M6.8 9.1c1.7 1.2 3.4 2.5 5.2 3.6 1.8-1.2 3.5-2.5 5.2-3.7',
+  ],
+};
+---
+
+<div class="social-row">
+  <span class="sketch-anchor">
+    {links.map((l) => (
+      <a
+        class="social-link"
+        href={l.href}
+        target={l.href.startsWith('http') ? '_blank' : undefined}
+        rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        aria-label={l.label}
+        data-tip={TOOLTIP_MAP[l.href]}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          {ICONS[l.icon].map((d) => <path d={d}></path>)}
+        </svg>
+      </a>
+    ))}
+    {note && <SketchNote text={note} placement="note-bottom" />}
+  </span>
+  <slot />
+</div>
+
+<script>
+  // publish obfuscated, de-obfuscate for humans with JS
+  function init() {
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="mailto:"]').forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      if (href.includes('[at]')) a.setAttribute('href', href.replace('[at]', '@'));
+      if (a.innerText.includes('[at]')) a.innerText = a.innerText.replace('[at]', '@');
+    });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

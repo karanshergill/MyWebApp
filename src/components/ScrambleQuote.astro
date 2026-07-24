@@ -1,0 +1,54 @@
+---
+// Homage to the old site's hero. Reduced-motion users get a zero-JS static
+// crossed-out variant via CSS media query — a designed fallback, not a broken one.
+---
+
+<span class="scramble-live">
+  i <span class="scramble-word" data-a="build" data-b="break">build</span> things{' '}
+  <span class="scramble-word" data-a="for" data-b="of">for</span> the web.
+</span>
+<span class="scramble-static">i <s class="gag">build</s> break things <s class="gag">for</s> of the web.</span>
+
+<style>
+  .scramble-static {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scramble-live {
+      display: none;
+    }
+    .scramble-static {
+      display: inline;
+    }
+  }
+</style>
+
+<script>
+  const GLYPHS = '!<>-_\\/[]{}=+*^?#';
+  function scrambleTo(el: HTMLElement, word: string) {
+    let i = 0;
+    const frames = 7;
+    const iv = setInterval(() => {
+      if (i++ >= frames) {
+        el.textContent = word;
+        clearInterval(iv);
+        return;
+      }
+      let s = '';
+      for (let j = 0; j < word.length; j++) s += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      el.textContent = s;
+    }, 55);
+  }
+  function init() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const words = document.querySelectorAll<HTMLElement>('.scramble-word');
+    if (!words.length || (words[0] as HTMLElement).dataset.bound) return;
+    words.forEach((w) => (w.dataset.bound = '1'));
+    let flip = false;
+    setInterval(() => {
+      flip = !flip;
+      words.forEach((w) => scrambleTo(w, flip ? w.dataset.b! : w.dataset.a!));
+    }, 5000);
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

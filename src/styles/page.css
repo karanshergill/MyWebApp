@@ -1,0 +1,205 @@
+/* Inner-page shell: conventional reading column + hide-on-scroll header. */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  background: color-mix(in srgb, var(--background-color) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.site-header.hidden-bar {
+  transform: translateY(-100%);
+}
+.site-header nav {
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+}
+.site-header a {
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+}
+.site-header a[aria-current='page'] {
+  color: var(--accent-color);
+}
+.home-link {
+  font-size: 1.05rem;
+}
+
+.gear-btn {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--foreground-color);
+}
+.gear-btn:hover {
+  background: var(--link-hover-bg);
+}
+.settings-wrap {
+  position: relative;
+}
+.settings-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  width: 280px;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+.settings-menu h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-color);
+  margin: 0.8rem 0 0.4rem;
+}
+.settings-menu h3:first-child {
+  margin-top: 0;
+}
+.settings-options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.settings-options button {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+}
+.settings-options button[aria-pressed='true'] {
+  background: var(--accent-color);
+  color: var(--on-accent);
+  border-color: var(--accent-color);
+}
+
+.page-view {
+  padding: 76px 1rem 4rem;
+  flex: 1;
+}
+.wrapper {
+  max-width: 65ch;
+  margin: 0 auto;
+  font-size: 1.25em;
+  line-height: 1.75;
+}
+.wrapper.wide {
+  max-width: 960px;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-h1);
+  margin: 1rem 0 0.4rem;
+  text-wrap: balance;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-h2);
+  margin: 2rem 0 0.6rem;
+  text-wrap: balance;
+}
+.post-meta {
+  font-family: var(--font-hand);
+  color: var(--muted-color);
+  font-size: var(--hand-sm);
+  margin-bottom: 2rem;
+}
+.wrapper p {
+  margin: 1em 0;
+}
+.wrapper a {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.wrapper a:visited {
+  color: var(--link-visited);
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.8em;
+  line-height: 1.5;
+  margin: 1.2em 0;
+}
+code {
+  font-family: ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
+}
+
+.page-footer {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted-color);
+  padding: 1.5rem 0 1rem;
+  font-family: var(--font-hand);
+}
+
+/* blog listing */
+.post-list {
+  list-style: none;
+  margin-top: 2rem;
+}
+.post-list li {
+  margin: 1.6rem 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.post-list a {
+  font-size: var(--text-list);
+  color: var(--foreground-color);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  padding-left: 0.6rem;
+  margin-left: -0.6rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+.post-list a:hover {
+  color: var(--accent-color);
+  border-left-color: var(--accent-color);
+  background: transparent;
+}
+.post-date {
+  font-family: var(--font-hand);
+  color: var(--ink);
+  opacity: 0.8;
+  font-size: var(--hand-2xs);
+  transform: rotate(-2deg);
+}
+
+@media (max-width: 575.98px) {
+  .site-header nav {
+    gap: 0.7rem;
+    font-size: 0.85rem;
+  }
+  .post-list li {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+}

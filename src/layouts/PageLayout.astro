@@ -1,0 +1,25 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/page.css';
+import '../styles/print.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: string;
+  wide?: boolean;
+  ogType?: string;
+}
+const { title, description, active, wide = false, ogType } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} ogType={ogType}>
+  <SiteHeader active={active} />
+  <main class="page-view" id="main-content">
+    <div class:list={['wrapper', { wide }]}>
+      <slot />
+    </div>
+  </main>
+  <footer class="page-footer">Designed &amp; Developed in India</footer>
+</BaseLayout>
