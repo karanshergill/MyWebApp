@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "karanshergill-com",
+  "name": "me",
   "compatibility_date": "2026-07-01",
   "assets": {
     "directory": "./dist",
@@ -10,8 +10,11 @@
   },
   "observability": {
     "enabled": true
-  }
-  // custom domains attached at cutover (owner-confirmed step):
+  },
+  // keep the me.karanshergill.workers.dev URL live even once custom domains attach
+  "workers_dev": true
+  // custom domains — re-enable and redeploy once the old apex A (76.76.21.21) and
+  // www DNS records are removed from the Cloudflare zone (they still exist and 409):
   // "routes": [
   //   { "pattern": "karanshergill.com", "custom_domain": true },
   //   { "pattern": "www.karanshergill.com", "custom_domain": true }
