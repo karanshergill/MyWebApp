@@ -11,7 +11,7 @@ interface Props {
 const { heading = 'todo:', items } = Astro.props;
 ---
 
-<div style="margin-bottom: 0.2rem" aria-hidden="true">{heading}</div>
+<div class="todo-heading" aria-hidden="true">{heading}</div>
 <ul class="todo-list">
   {items.map((item) =>
     item.done ? (
@@ -26,6 +26,12 @@ const { heading = 'todo:', items } = Astro.props;
   )}
 </ul>
 <span class="sr-only" role="status" aria-live="polite" data-todo-status></span>
+
+<style>
+  .todo-heading {
+    margin-bottom: 0.2rem;
+  }
+</style>
 
 <script>
   function init() {
@@ -71,5 +77,5 @@ const { heading = 'todo:', items } = Astro.props;
       });
     });
   }
-  document.addEventListener('astro:page-load', init);
+  init();
 </script>

@@ -14,6 +14,7 @@ export const SITE = {
   umami: {
     src: 'https://umami.up.railway.app/script.js',
     websiteId: '0311b62c-a331-4696-a4a4-c7783ba4be5f',
+    domains: 'karanshergill.com,www.karanshergill.com',
   },
   repo: 'https://github.com/karanshergill/MyWebApp',
 } as const;

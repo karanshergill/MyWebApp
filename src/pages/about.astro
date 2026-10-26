@@ -22,7 +22,7 @@ import PageLayout from '../layouts/PageLayout.astro';
     <span class="about-note" aria-hidden="true">(the cats always win)</span>
   </p>
 
-  <p style="margin-top:2rem">
+  <p class="about-links">
     <a href="/work">work with me</a> &middot; <a href="/now">what i'm doing now</a> &middot;
     <a href="mailto:email[at]karanshergill.com">say hello</a>
   </p>
@@ -34,5 +34,8 @@ import PageLayout from '../layouts/PageLayout.astro';
     color: var(--ink);
     opacity: 0.8;
     margin-left: 0.4rem;
+  }
+  .about-links {
+    margin-top: 2rem;
   }
 </style>

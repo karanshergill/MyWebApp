@@ -12,8 +12,17 @@ const tickBottom = sketchLine(25, 50, 35, 50, 23);
 ---
 
 <span class="layout-guide" aria-hidden="true">
-  <svg width="60" height="60" viewBox="0 0 60 60" style="overflow: visible" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4">
+  <svg class="layout-guide-svg" width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1" opacity="0.4">
     {[...rule, ...tickTop, ...tickBottom].map((d) => <path d={d}></path>)}
-    <text x="40" y="35" font-size="17" fill="currentColor" stroke="none" opacity="0.6" style="font-family: var(--font-hand)">{label}</text>
+    <text class="layout-guide-label" x="40" y="35" font-size="17" fill="currentColor" stroke="none" opacity="0.6">{label}</text>
   </svg>
 </span>
+
+<style>
+  .layout-guide-svg {
+    overflow: visible;
+  }
+  .layout-guide-label {
+    font-family: var(--font-hand);
+  }
+</style>

@@ -101,5 +101,5 @@ import ThemeSwitcher from './ThemeSwitcher.astro';
     applyFont(safeGet('font') || 'lexend');
     if (safeGet('fontSize')) applySize(size);
   }
-  document.addEventListener('astro:page-load', init);
+  init();
 </script>

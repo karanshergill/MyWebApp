@@ -47,6 +47,6 @@ const { size = 44 } = Astro.props;
     });
     sync();
   }
-  document.addEventListener('astro:page-load', init);
+  init();
   document.documentElement.addEventListener('themechange', sync);
 </script>

@@ -26,6 +26,16 @@ body {
   background: var(--background-color);
   color: var(--foreground-color);
   transition: background 0.3s ease, color 0.3s ease;
+  isolation: isolate;
+}
+
+.app-foreground {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 ::selection {

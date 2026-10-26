@@ -1,0 +1,333 @@
+<canvas class="app-background" data-app-background aria-hidden="true"></canvas>
+
+<style>
+  .app-background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: rgb(var(--ambient-bg-rgb));
+  }
+</style>
+
+<script>
+  type Tint = 'base' | 'cool' | 'warm';
+
+  interface Particle {
+    homeX: number;
+    homeY: number;
+    offsetX: number;
+    offsetY: number;
+    size: number;
+    opacity: number;
+    phase: number;
+    glyph: string;
+    tint: Tint;
+    nextGlyphAt: number;
+  }
+
+  interface Ripple {
+    x: number;
+    y: number;
+    bornAt: number;
+    duration: number;
+    radius: number;
+  }
+
+  interface Palette {
+    background: [number, number, number];
+    dot: [number, number, number];
+    cool: [number, number, number];
+    warm: [number, number, number];
+    opacity: number;
+  }
+
+  const GLYPHS = ['0', '1', '{}', '</>', 'fn', '=>', '//', '0x', '::', '[]'];
+  const POINTER_RADIUS = 170;
+  const RIPPLE_WIDTH = 72;
+
+  function clamp(value: number, min: number, max: number) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function seededRandom(seed: number) {
+    let state = seed >>> 0;
+    return () => {
+      state += 0x6d2b79f5;
+      let value = state;
+      value = Math.imul(value ^ (value >>> 15), value | 1);
+      value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+      return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function parseRgb(value: string, fallback: [number, number, number]): [number, number, number] {
+    const channels = value
+      .trim()
+      .split(',')
+      .map((channel) => Number(channel.trim()));
+    return channels.length === 3 && channels.every(Number.isFinite)
+      ? [channels[0], channels[1], channels[2]]
+      : fallback;
+  }
+
+  function rgba(rgb: [number, number, number], alpha: number) {
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+  }
+
+  function readPalette(): Palette {
+    const styles = getComputedStyle(document.documentElement);
+    return {
+      background: parseRgb(styles.getPropertyValue('--ambient-bg-rgb'), [250, 250, 250]),
+      dot: parseRgb(styles.getPropertyValue('--ambient-dot-rgb'), [26, 26, 26]),
+      cool: parseRgb(styles.getPropertyValue('--ambient-cool-rgb'), [21, 101, 192]),
+      warm: parseRgb(styles.getPropertyValue('--ambient-warm-rgb'), [198, 40, 40]),
+      opacity: clamp(Number(styles.getPropertyValue('--ambient-opacity')) || 0.22, 0.08, 0.5),
+    };
+  }
+
+  function createBackground(canvas: HTMLCanvasElement) {
+    const maybeContext = canvas.getContext('2d');
+    if (!maybeContext) return;
+    const context: CanvasRenderingContext2D = maybeContext;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const particles: Particle[] = [];
+    const ripples: Ripple[] = [];
+    const pointer = { x: -9999, y: -9999, active: false };
+
+    let width = 0;
+    let height = 0;
+    let palette = readPalette();
+    let animationFrame = 0;
+    let resizeTimer = 0;
+    let running = false;
+    let resetFrame = true;
+
+    function buildGrid() {
+      particles.length = 0;
+
+      const targetCount = width < 640 ? 380 : width < 1024 ? 760 : 1350;
+      const spacing = clamp(Math.sqrt((width * height) / targetCount), 20, 35);
+      const rowHeight = spacing * 0.866;
+      const columns = Math.ceil(width / spacing) + 2;
+      const rows = Math.ceil(height / rowHeight) + 2;
+      const random = seededRandom(Math.round(width * 13 + height * 17));
+      const originX = (width - (columns - 1) * spacing) / 2;
+      const originY = (height - (rows - 1) * rowHeight) / 2;
+
+      for (let row = 0; row < rows; row += 1) {
+        for (let column = 0; column < columns; column += 1) {
+          const stagger = row % 2 === 0 ? 0 : spacing / 2;
+          const homeX = originX + column * spacing + stagger + (random() - 0.5) * spacing * 0.24;
+          const homeY = originY + row * rowHeight + (random() - 0.5) * spacing * 0.24;
+          if (homeX < -spacing || homeX > width + spacing || homeY < -spacing || homeY > height + spacing) continue;
+
+          const tintRoll = random();
+          const tint: Tint = tintRoll < 0.035 ? 'cool' : tintRoll < 0.06 ? 'warm' : 'base';
+          particles.push({
+            homeX,
+            homeY,
+            offsetX: 0,
+            offsetY: 0,
+            size: 0.65 + random() * 1.25,
+            opacity: 0.42 + random() * 0.4,
+            phase: random() * Math.PI * 2,
+            glyph: GLYPHS[Math.floor(random() * GLYPHS.length)],
+            tint,
+            nextGlyphAt: 0,
+          });
+        }
+      }
+    }
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const scale = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * scale);
+      canvas.height = Math.round(height * scale);
+      context.setTransform(scale, 0, 0, scale, 0, 0);
+      buildGrid();
+      resetFrame = true;
+      draw(performance.now(), true);
+    }
+
+    function particleColor(particle: Particle) {
+      if (particle.tint === 'cool') return palette.cool;
+      if (particle.tint === 'warm') return palette.warm;
+      return palette.dot;
+    }
+
+    function draw(timestamp: number, staticFrame = false) {
+      if (!width || !height) return;
+
+      if (resetFrame || staticFrame) {
+        context.fillStyle = rgba(palette.background, 1);
+        context.fillRect(0, 0, width, height);
+        resetFrame = false;
+      } else {
+        context.fillStyle = rgba(palette.background, 0.34);
+        context.fillRect(0, 0, width, height);
+      }
+
+      const seconds = timestamp * 0.001;
+      const now = Date.now();
+
+      for (const particle of particles) {
+        let forceX = 0;
+        let forceY = 0;
+        let activation = 0;
+
+        if (pointer.active && !staticFrame) {
+          const dx = particle.homeX - pointer.x;
+          const dy = particle.homeY - pointer.y;
+          const distance = Math.hypot(dx, dy);
+          if (distance > 1 && distance < POINTER_RADIUS) {
+            const proximity = 1 - distance / POINTER_RADIUS;
+            const strength = proximity * proximity * 42;
+            forceX += (dx / distance) * strength;
+            forceY += (dy / distance) * strength;
+            activation = Math.max(activation, proximity);
+          }
+        }
+
+        for (const ripple of ripples) {
+          const progress = (now - ripple.bornAt) / ripple.duration;
+          if (progress < 0 || progress > 1) continue;
+          const dx = particle.homeX - ripple.x;
+          const dy = particle.homeY - ripple.y;
+          const distance = Math.hypot(dx, dy);
+          const wave = progress * ripple.radius;
+          const distanceFromWave = Math.abs(distance - wave);
+          if (distance > 1 && distanceFromWave < RIPPLE_WIDTH) {
+            const influence = (1 - distanceFromWave / RIPPLE_WIDTH) * (1 - progress);
+            forceX += (dx / distance) * influence * 32;
+            forceY += (dy / distance) * influence * 32;
+            activation = Math.max(activation, influence);
+          }
+        }
+
+        const easing = staticFrame ? 1 : 0.12;
+        particle.offsetX += (forceX - particle.offsetX) * easing;
+        particle.offsetY += (forceY - particle.offsetY) * easing;
+
+        const drift = staticFrame ? 0 : Math.sin(seconds * 0.45 + particle.phase) * 0.55;
+        const x = particle.homeX + particle.offsetX + Math.cos(particle.phase) * drift;
+        const y = particle.homeY + particle.offsetY + Math.sin(particle.phase) * drift;
+        const centerFade = 1 - Math.min(Math.hypot(x - width / 2, y - height / 2) / Math.hypot(width / 2, height / 2), 1) * 0.3;
+        const baseOpacity = particle.opacity * centerFade * palette.opacity;
+
+        if (activation > 0.16) {
+          if (now >= particle.nextGlyphAt) {
+            particle.glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+            particle.nextGlyphAt = now + 120 + Math.random() * 300;
+          }
+          const glyphColor = particle.tint === 'base' ? palette.dot : particleColor(particle);
+          context.fillStyle = rgba(glyphColor, Math.min(0.82, baseOpacity * 1.4 + activation * 0.58));
+          context.font = `600 ${Math.round(6 + activation * 4)}px ui-monospace, "Cascadia Code", Menlo, monospace`;
+          context.textAlign = 'center';
+          context.textBaseline = 'middle';
+          context.fillText(particle.glyph, x, y);
+        } else {
+          context.fillStyle = rgba(particleColor(particle), baseOpacity);
+          const size = particle.size * (1 + activation * 0.35);
+          context.fillRect(Math.round(x - size / 2), Math.round(y - size / 2), size, size);
+        }
+      }
+
+      for (let index = ripples.length - 1; index >= 0; index -= 1) {
+        const ripple = ripples[index];
+        const progress = (now - ripple.bornAt) / ripple.duration;
+        if (progress >= 1) {
+          ripples.splice(index, 1);
+          continue;
+        }
+        context.beginPath();
+        context.arc(ripple.x, ripple.y, progress * ripple.radius, 0, Math.PI * 2);
+        context.lineWidth = 1;
+        context.strokeStyle = rgba(palette.warm, (1 - progress) * 0.16);
+        context.stroke();
+      }
+    }
+
+    function frame(timestamp: number) {
+      if (!running) return;
+      draw(timestamp);
+      animationFrame = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (running || reduceMotion.matches || document.hidden) return;
+      running = true;
+      animationFrame = requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(animationFrame);
+    }
+
+    function onMotionPreferenceChange() {
+      stop();
+      resetFrame = true;
+      if (reduceMotion.matches) draw(performance.now(), true);
+      else start();
+    }
+
+    function onThemeChange() {
+      palette = readPalette();
+      resetFrame = true;
+      if (reduceMotion.matches) draw(performance.now(), true);
+    }
+
+    function onResize() {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resize, 160);
+    }
+
+    function onVisibilityChange() {
+      if (document.hidden) stop();
+      else if (!reduceMotion.matches) start();
+    }
+
+    function onPointerMove(event: PointerEvent) {
+      if (event.pointerType === 'touch' || reduceMotion.matches) return;
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      pointer.active = true;
+    }
+
+    function onPointerLeave(event: PointerEvent) {
+      if (event.relatedTarget) return;
+      pointer.active = false;
+    }
+
+    function onClick(event: MouseEvent) {
+      if (reduceMotion.matches) return;
+      ripples.push({
+        x: event.clientX,
+        y: event.clientY,
+        bornAt: Date.now(),
+        duration: 1150,
+        radius: Math.max(width, height) * 0.72,
+      });
+    }
+
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerout', onPointerLeave, { passive: true });
+    window.addEventListener('click', onClick, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    document.documentElement.addEventListener('themechange', onThemeChange);
+    reduceMotion.addEventListener('change', onMotionPreferenceChange);
+
+    resize();
+    if (!reduceMotion.matches) start();
+  }
+
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-app-background]');
+  if (canvas) createBackground(canvas);
+</script>

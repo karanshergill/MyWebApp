@@ -6,7 +6,7 @@ import { tipBucketPaths, TIP_BUCKETS, TIP_HEIGHT } from '../lib/rough';
 const buckets = tipBucketPaths();
 ---
 
-<svg style="display:none" aria-hidden="true">
+<svg class="tooltip-symbols" aria-hidden="true">
   {buckets.map(({ w, paths }) => (
     <symbol id={`tipbox-${w}`} viewBox={`0 0 ${w} ${TIP_HEIGHT}`}>
       {paths.map((d) => (
@@ -20,6 +20,12 @@ const buckets = tipBucketPaths();
   <svg class="tip-box" preserveAspectRatio="none"><use href={`#tipbox-${TIP_BUCKETS[0]}`}></use></svg>
   <span class="tip-text"></span>
 </div>
+
+<style>
+  .tooltip-symbols {
+    display: none;
+  }
+</style>
 
 <script>
   function init() {
@@ -61,5 +67,5 @@ const buckets = tipBucketPaths();
     });
     document.addEventListener('focusout', () => hide());
   }
-  document.addEventListener('astro:page-load', init);
+  init();
 </script>

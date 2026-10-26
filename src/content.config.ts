@@ -1,5 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
+import { z } from 'astro/zod';
 
 const blog = defineCollection({
   loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
@@ -27,21 +28,4 @@ const projects = defineCollection({
   }),
 });
 
-const gallery = defineCollection({
-  loader: glob({ base: './src/content/gallery', pattern: '**/*.{md,json}' }),
-  schema: ({ image }) =>
-    z.object({
-      src: image(),
-      // real alt text enforced at build (spec FR-005): min length + ban junk patterns
-      alt: z
-        .string()
-        .min(15, 'write a real description')
-        .refine((s) => !/photo\s*\d|\.webp|\.jpg|img_/i.test(s), {
-          message: 'alt text looks like a filename — describe the photo',
-        }),
-      wide: z.boolean().default(false),
-      order: z.number().default(99),
-    }),
-});
-
-export const collections = { blog, projects, gallery };
+export const collections = { blog, projects };

@@ -50,5 +50,5 @@
       words.forEach((w) => scrambleTo(w, flip ? w.dataset.b! : w.dataset.a!));
     }, 5000);
   }
-  document.addEventListener('astro:page-load', init);
+  init();
 </script>
