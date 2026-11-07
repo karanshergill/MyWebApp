@@ -150,37 +150,6 @@
   color: var(--scribble);
 }
 
-/* theme switcher */
-.mode-switch {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  justify-content: flex-end;
-  transform: rotate(-1deg);
-  pointer-events: auto;
-}
-.mode-icon {
-  opacity: 0.3;
-  transition: opacity 0.3s ease;
-  color: var(--ink);
-  padding: 2px;
-  min-width: 44px;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.mode-icon[aria-pressed='true'] {
-  opacity: 1;
-}
-.mode-icon:hover {
-  opacity: 0.75;
-  background: transparent;
-}
-.mode-icon svg {
-  stroke: currentColor;
-}
-
 /* todo easter egg */
 .todo-list {
   list-style: none;
@@ -236,6 +205,15 @@
   10% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .todo-msg.show {
+    animation: none;
+    opacity: 1;
+  }
+  .todo-shake {
+    animation: none;
+  }
 }
 .todo-punchline {
   font-size: 3rem;
@@ -344,10 +322,15 @@
     width: 3.2rem;
     margin-right: 0.8rem;
   }
-  .corner-layer,
+  .corner-annotation:not(.top-right),
   .layout-guide,
   .hand-tooltip {
     display: none !important;
+  }
+  .corner-annotation.top-right {
+    top: 1rem;
+    right: 1rem;
+    transform: none;
   }
   .mobile-footer {
     display: block;

@@ -26,6 +26,38 @@ const { size = 44 } = Astro.props;
   </button>
 </div>
 
+<style>
+  .mode-switch {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    justify-content: flex-end;
+    transform: rotate(-1deg);
+    pointer-events: auto;
+  }
+  .mode-icon {
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    color: var(--ink);
+    padding: 2px;
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mode-icon[aria-pressed='true'] {
+    opacity: 1;
+  }
+  .mode-icon:hover {
+    opacity: 0.75;
+    background: transparent;
+  }
+  .mode-icon svg {
+    stroke: currentColor;
+  }
+</style>
+
 <script>
   function currentTheme(): string {
     const m = document.documentElement.className.match(/(light|dark|cream)-mode/);

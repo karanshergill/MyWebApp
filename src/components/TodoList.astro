@@ -11,20 +11,22 @@ interface Props {
 const { heading = 'todo:', items } = Astro.props;
 ---
 
-<div class="todo-heading" aria-hidden="true">{heading}</div>
-<ul class="todo-list">
-  {items.map((item) =>
-    item.done ? (
-      <li><span class="checkbox" aria-hidden="true">&#10003;</span>{item.label}</li>
-    ) : (
-      <li>
-        <button type="button" class="todo-btn" data-msgs={JSON.stringify(item.msgs ?? ['not yet...'])}>
-          <span class="checkbox" aria-hidden="true">&#9633;</span>{item.label}
-        </button>
-      </li>
-    )
-  )}
-</ul>
+<div data-todo-content>
+  <div class="todo-heading" aria-hidden="true">{heading}</div>
+  <ul class="todo-list">
+    {items.map((item) =>
+      item.done ? (
+        <li><span class="checkbox" aria-hidden="true">&#10003;</span>{item.label}</li>
+      ) : (
+        <li>
+          <button type="button" class="todo-btn" data-msgs={JSON.stringify(item.msgs ?? ['not yet...'])}>
+            <span class="checkbox" aria-hidden="true">&#9633;</span>{item.label}
+          </button>
+        </li>
+      )
+    )}
+  </ul>
+</div>
 <span class="sr-only" role="status" aria-live="polite" data-todo-status></span>
 
 <style>
@@ -48,8 +50,8 @@ const { heading = 'todo:', items } = Astro.props;
         if (busy) return;
         busy = true;
         if (idx >= msgs.length) {
-          const corner = btn.closest<HTMLElement>('.corner-annotation');
-          if (corner) corner.innerHTML = '<span class="todo-punchline">:p</span>';
+          const content = btn.closest<HTMLElement>('[data-todo-content]');
+          if (content) content.innerHTML = '<span class="todo-punchline">:p</span>';
           if (status) status.textContent = ':p';
           return;
         }

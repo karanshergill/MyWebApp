@@ -10,7 +10,7 @@ Ordering: T1→T6 sequential (shared design system); [P] = parallelizable within
 - [x] Font files in src/assets/fonts/ (Excalifont latin 25KB; OpenDyslexic ×4)
 - [x] Spec-kit: constitution v1.0.0, spec.md, checklists, plan.md, tasks.md
 - [ ] tokens.css (3 themes, AA-fixed: accent #1565c0 light/cream, --on-accent, --ink, --scribble, --selection-*) + global.css (reset, base, focus-visible, sr-only, skip-link, reduced-motion block)
-- [ ] BaseLayout.astro: lang="en", meta/OG/JSON-LD Person (worksFor HackerOne/Basiq360/Litass draft), <Font> tags (preload Excalifont+Comfortaa; Lexend + OpenDyslexic non-preload), inline theme-init (pre-paint, localStorage+system), inline ink-hidden FOUT script (fonts.load + catch + 2.5s timeout), RSS autodiscovery, Umami defer
+- [ ] BaseLayout.astro: lang="en", meta/OG/JSON-LD Person (worksFor HackerOne/Basiq360/Litass draft), <Font> tags (preload Excalifont+Comfortaa; Lexend + OpenDyslexic non-preload), inline theme-init (pre-paint, localStorage+system), inline ink-hidden FOUT script (fonts.load + catch + 2.5s timeout), RSS autodiscovery, Umami async
 - **Accept**: `astro check` clean; a placeholder page builds with correct meta CSP tag, font-face blocks, no theme flash.
 
 ## T2 — Sketchbook homepage (US1)
@@ -44,3 +44,20 @@ Ordering: T1→T6 sequential (shared design system); [P] = parallelizable within
 - [ ] `npm run build` + `wrangler dev` route walk + `curl -I` assertions + gzip budget measurement + Lighthouse
 - [ ] `wrangler deploy` → workers.dev verification. **DNS cutover: separate, owner-confirmed step**
 - **Accept**: SC-004, SC-006 verified on workers.dev; cutover checklist ready.
+
+## Review fixes — 2026-11-07
+
+- [x] Keep theme-control styling in ThemeSwitcher so inner-page icons and targets render.
+- [x] Use a two-row mobile header with room for navigation, settings, and page content.
+- [x] Load analytics asynchronously so a stalled request cannot block site interactions.
+- [x] Preserve the homepage theme switcher on mobile while hiding decorative corners.
+- [x] Reveal the header immediately while keyboard focus is inside it.
+- [x] Keep reduced-motion todo replies visible without fade or shake animations.
+- [x] Replace only todo visual content, preserving the live region for the final reply.
+- [x] Remove incorrect About current-page markers from Work, Now, and Uses.
+
+Verified locally with `npm run build` (zero diagnostics) and Chromium against
+`wrangler dev`: theme controls, mobile header at 320/375/575px, stalled analytics,
+keyboard focus, normal/reduced-motion replies, final live-region attachment and
+text, navigation markers, and preference persistence. No production deployment
+or assistive-technology speech-output audit was performed.
