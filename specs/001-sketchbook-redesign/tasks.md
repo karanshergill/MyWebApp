@@ -61,3 +61,7 @@ Verified locally with `npm run build` (zero diagnostics) and Chromium against
 keyboard focus, normal/reduced-motion replies, final live-region attachment and
 text, navigation markers, and preference persistence. No production deployment
 or assistive-technology speech-output audit was performed.
+
+Background adjustment: code-fragment opacity is halved; dot opacity, theme colors,
+and click ripples are unchanged. Verified with `npm run build` (zero diagnostics)
+and browser rendering in light, dark, and cream themes.

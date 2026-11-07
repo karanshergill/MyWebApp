@@ -226,7 +226,7 @@
             particle.nextGlyphAt = now + 120 + Math.random() * 300;
           }
           const glyphColor = particle.tint === 'base' ? palette.dot : particleColor(particle);
-          context.fillStyle = rgba(glyphColor, Math.min(0.82, baseOpacity * 1.4 + activation * 0.58));
+          context.fillStyle = rgba(glyphColor, Math.min(0.82, baseOpacity * 1.4 + activation * 0.58) * 0.5);
           context.font = `600 ${Math.round(6 + activation * 4)}px ui-monospace, "Cascadia Code", Menlo, monospace`;
           context.textAlign = 'center';
           context.textBaseline = 'middle';
